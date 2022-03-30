@@ -265,6 +265,9 @@ class HomeCtrl extends GetxController {
         children: [
           Expanded(
               child: TextField(
+            textAlign: ui.TextAlign.center,
+            decoration:
+                const InputDecoration(hintText: "لطفا نام پروژه را وارد کنید"),
             controller: textEditingController,
           )),
           IconButton(
