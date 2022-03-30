@@ -14,7 +14,8 @@ class ImageText extends StatelessWidget {
           fontSize: textModel.fontSize,
           color: textModel.fontColor,
           fontWeight: textModel.fontWeight,
-          fontStyle: textModel.fontStyle),
+          fontStyle: textModel.fontStyle,
+          fontFamily: textModel.fontFamily),
     );
   }
 }

@@ -10,9 +10,12 @@ class PickedImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: image.imageHeight,
-      width: image.imageWidth,
-      child: Image.file(File(image.image.path)),
+      height: image.imageHeight.toDouble(),
+      width: image.imageWidth.toDouble(),
+      child: Image.file(
+        File(image.image.path),
+        fit: BoxFit.scaleDown,
+      ),
     );
   }
 }

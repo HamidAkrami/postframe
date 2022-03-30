@@ -19,45 +19,12 @@ class Editor extends StatefulWidget {
   State<Editor> createState() => _EditorState();
 }
 
-class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
+class _EditorState extends State<Editor> {
   final homeCtrl = Get.find<HomeCtrl>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Color color = Colors.black;
 
   Color pickedColor = Colors.black;
-  late AnimationController animationController;
-  late TransformationController Controller;
-  Animation<Matrix4>? animation;
-  final double minScale = 1;
-  final double maxScale = 4;
-  void resetAnimation() {
-    animation = Matrix4Tween(
-      begin: Controller.value,
-      end: Matrix4.identity(),
-    ).animate(CurvedAnimation(parent: animationController, curve: Curves.ease));
-    animationController.forward(from: 0);
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    Controller = TransformationController();
-    animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 200))
-          ..addListener(() {
-            Controller.value = animation!.value;
-          });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-
-    Controller.dispose();
-    animationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,111 +45,102 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
             });
           },
           child: Container(
+            alignment: Alignment.center,
             color: Colors.transparent,
-            child: RepaintBoundary(
-              key: homeCtrl.globalKey,
-              child: Screenshot(
-                controller: homeCtrl.screenShotController,
-                child: SafeArea(
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Container(
-                        height: 100,
-                        width: 100,
-                      ),
-                      for (var j = 0; j < homeCtrl.images.length; j++)
-                        Positioned(
-                            top: homeCtrl.images[j].top,
-                            left: homeCtrl.images[j].left,
-                            child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    homeCtrl.setCurrentImageIndex(j);
-                                    homeCtrl.editImage = true;
-                                    if (homeCtrl.editText == true) {
-                                      homeCtrl.editText = false;
-                                    }
-                                    print(j);
-                                  });
-                                },
-                                child: Draggable(
-                                    onDragStarted: () {
-                                      setState(() {
-                                        homeCtrl.setCurrentImageIndex(j);
-                                        homeCtrl.dragOpacity = true;
-                                        homeCtrl.setCurrentImageIndex(j);
-                                        homeCtrl.editImage = true;
-                                        if (homeCtrl.editText == true) {
-                                          homeCtrl.editText = false;
-                                        }
-                                      });
-                                    },
-                                    onDragEnd: (details) {
-                                      final renderBox = context
-                                          .findRenderObject() as RenderBox;
-                                      Offset off = renderBox
-                                          .globalToLocal(details.offset);
-                                      setState(() {
-                                        homeCtrl.dragOpacity = false;
-                                        homeCtrl.images[j].top =
-                                            off.dy - size.height * 0.127;
-                                        homeCtrl.images[j].left = off.dx;
-                                      });
-                                    },
-                                    onDraggableCanceled: (velocity, offset) {
-                                      homeCtrl.dragOpacity = false;
-                                    },
-                                    feedback: Transform.rotate(
-                                        angle: homeCtrl.images[j].imageDegree /
-                                            15.93,
-                                        child: PickedImage(
-                                            image: homeCtrl.images[j])),
-                                    child: homeCtrl.dragOpacity == true
-                                        ? Opacity(
-                                            opacity: 0.2,
-                                            child: Transform.rotate(
-                                              angle: homeCtrl
-                                                      .images[j].imageDegree /
-                                                  15.93,
-                                              child: PickedImage(
-                                                  image: homeCtrl.images[j]),
-                                            ))
-                                        : Opacity(
-                                            opacity: 1,
-                                            child: Transform.rotate(
-                                              angle: homeCtrl
-                                                      .images[j].imageDegree /
-                                                  15.93,
-                                              child: Container(
-                                                height: 300,
-                                                width: 300,
-                                                child: InteractiveViewer(
-                                                  transformationController:
-                                                      Controller,
-                                                  clipBehavior: Clip.none,
-                                                  panEnabled: false,
-                                                  minScale: minScale,
-                                                  maxScale: maxScale,
-                                                  onInteractionEnd: (details) {
-                                                    resetAnimation();
-                                                  },
-                                                  child: AspectRatio(
-                                                    aspectRatio: 1.0,
-                                                    child: PickedImage(
-                                                        image:
-                                                            homeCtrl.images[j]),
-                                                  ),
-                                                ),
-                                              ),
-                                            ))))),
-                      for (var i = 0; i < homeCtrl.texts.length; i++)
-                        Positioned(
-                            top: homeCtrl.texts[i].top,
-                            left: homeCtrl.texts[i].left,
-                            child: GestureDetector(
-                              onLongPress: () {},
+            child: Screenshot(
+              controller: homeCtrl.screenShotController,
+              child: Container(
+                height: 250,
+                width: Get.width,
+                color: Colors.red,
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    for (var j = 0; j < homeCtrl.images.length; j++)
+                      Positioned(
+                          top: homeCtrl.images[j].top,
+                          left: homeCtrl.images[j].left,
+                          child: GestureDetector(
                               onTap: () {
+                                setState(() {
+                                  homeCtrl.setCurrentImageIndex(j);
+                                  homeCtrl.editImage = true;
+                                  if (homeCtrl.editText == true) {
+                                    homeCtrl.editText = false;
+                                  }
+                                  print(homeCtrl.images[homeCtrl
+                                      .currentImageIndexSelected.value]);
+                                });
+                              },
+                              child: Draggable(
+                                  onDragStarted: () {
+                                    setState(() {
+                                      homeCtrl.setCurrentImageIndex(j);
+                                      homeCtrl.dragOpacity = true;
+                                      homeCtrl.setCurrentImageIndex(j);
+                                      homeCtrl.editImage = true;
+                                      if (homeCtrl.editText == true) {
+                                        homeCtrl.editText = false;
+                                      }
+                                    });
+                                  },
+                                  onDragEnd: (details) {
+                                    final renderBox =
+                                        context.findRenderObject() as RenderBox;
+                                    Offset off =
+                                        renderBox.globalToLocal(details.offset);
+                                    setState(() {
+                                      homeCtrl.dragOpacity = false;
+                                      homeCtrl.images[j].top =
+                                          off.dy - size.height * 0.127;
+                                      homeCtrl.images[j].left = off.dx;
+                                    });
+                                  },
+                                  onDraggableCanceled: (velocity, offset) {
+                                    homeCtrl.dragOpacity = false;
+                                  },
+                                  feedback: Transform.rotate(
+                                      angle: homeCtrl.images[j].imageDegree /
+                                          15.93,
+                                      child: PickedImage(
+                                          image: homeCtrl.images[j])),
+                                  child: homeCtrl.dragOpacity == true
+                                      ? Opacity(
+                                          opacity: 0.2,
+                                          child: Transform.rotate(
+                                            angle:
+                                                homeCtrl.images[j].imageDegree /
+                                                    15.93,
+                                            child: PickedImage(
+                                                image: homeCtrl.images[j]),
+                                          ))
+                                      : Opacity(
+                                          opacity: 1,
+                                          child: Transform.rotate(
+                                            angle:
+                                                homeCtrl.images[j].imageDegree /
+                                                    15.93,
+                                            child: PickedImage(
+                                                image: homeCtrl.images[j]),
+                                          ))))),
+                    for (var i = 0; i < homeCtrl.texts.length; i++)
+                      Positioned(
+                          top: homeCtrl.texts[i].top,
+                          left: homeCtrl.texts[i].left,
+                          child: GestureDetector(
+                            onLongPress: () {},
+                            onTap: () {
+                              setState(() {
+                                homeCtrl.setCurrentTextIndex(i);
+                                homeCtrl.editText = true;
+                                if (homeCtrl.editImage == true) {
+                                  homeCtrl.editImage = false;
+                                }
+                              });
+                              print(homeCtrl.currentTextIndexSelected.value);
+                            },
+                            child: Draggable(
+                              onDragStarted: () {
                                 setState(() {
                                   homeCtrl.setCurrentTextIndex(i);
                                   homeCtrl.editText = true;
@@ -192,51 +150,38 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
                                 });
                                 print(homeCtrl.currentTextIndexSelected.value);
                               },
-                              child: Draggable(
-                                onDragStarted: () {
-                                  setState(() {
-                                    homeCtrl.setCurrentTextIndex(i);
-                                    homeCtrl.editText = true;
-                                    if (homeCtrl.editImage == true) {
-                                      homeCtrl.editImage = false;
-                                    }
-                                  });
-                                  print(
-                                      homeCtrl.currentTextIndexSelected.value);
-                                },
-                                onDraggableCanceled: (_, __) {
-                                  setState(() {
-                                    homeCtrl.deleteTextItem = false;
-                                  });
-                                },
-                                feedback: Transform.rotate(
-                                  angle: homeCtrl.texts[i].fontDegree / 15.93,
-                                  child: ImageText(
-                                    textModel: homeCtrl.texts[i],
-                                  ),
+                              onDraggableCanceled: (_, __) {
+                                setState(() {
+                                  homeCtrl.deleteTextItem = false;
+                                });
+                              },
+                              feedback: Transform.rotate(
+                                angle: homeCtrl.texts[i].fontDegree / 15.93,
+                                child: ImageText(
+                                  textModel: homeCtrl.texts[i],
                                 ),
-                                child: Transform.rotate(
-                                  angle: homeCtrl.texts[i].fontDegree / 15.93,
-                                  child: ImageText(
-                                    textModel: homeCtrl.texts[i],
-                                  ),
-                                ),
-                                onDragEnd: (details) {
-                                  final renderBox =
-                                      context.findRenderObject() as RenderBox;
-                                  Offset off =
-                                      renderBox.globalToLocal(details.offset);
-                                  setState(() {
-                                    homeCtrl.deleteTextItem = false;
-                                    homeCtrl.texts[i].top =
-                                        off.dy - size.height * 0.127;
-                                    homeCtrl.texts[i].left = off.dx;
-                                  });
-                                },
                               ),
-                            ))
-                    ],
-                  ),
+                              child: Transform.rotate(
+                                angle: homeCtrl.texts[i].fontDegree / 15.93,
+                                child: ImageText(
+                                  textModel: homeCtrl.texts[i],
+                                ),
+                              ),
+                              onDragEnd: (details) {
+                                final renderBox =
+                                    context.findRenderObject() as RenderBox;
+                                Offset off =
+                                    renderBox.globalToLocal(details.offset);
+                                setState(() {
+                                  homeCtrl.deleteTextItem = false;
+                                  homeCtrl.texts[i].top =
+                                      off.dy - size.height * 0.127;
+                                  homeCtrl.texts[i].left = off.dx;
+                                });
+                              },
+                            ),
+                          ))
+                  ],
                 ),
               ),
             ),
@@ -255,7 +200,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
                   children: [
                     InkWell(
                       onTap: () {
-                        addShowModalBottomSheet(context, size);
+                        addnewText(context, size);
                       },
                       child: AddBtns(
                           imageIcon: "assets/icons/text.png",
@@ -264,6 +209,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
                     ),
                     InkWell(
                       onTap: () {
+                        homeCtrl.image.value = null;
                         addNewImage(context, size);
                       },
                       child: AddBtns(
@@ -314,6 +260,24 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
               homeCtrl.imageRotateValue.value = value;
             });
           }));
+  Widget get imageSizeSLider => SliderTheme(
+      data: SliderThemeData(
+          thumbColor: Colors.blue,
+          activeTickMarkColor: Colors.green[100],
+          inactiveTrackColor: Colors.black),
+      child: Slider(
+          min: 10,
+          max: 1000,
+          divisions: 1000,
+          label: homeCtrl.imageSizeValue.value.round().toString(),
+          value: homeCtrl
+              .images[homeCtrl.currentImageIndexSelected.value].imageHeight,
+          onChanged: (value) {
+            setState(() {
+              homeCtrl.changeImageSize(value);
+              homeCtrl.imageSizeValue.value = value;
+            });
+          }));
 
   Widget get fontDegreeSlider => SliderTheme(
       data: SliderThemeData(
@@ -350,6 +314,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
               homeCtrl.fontSizeValue.value = value;
             });
           }));
+
   AppBar get _appBar => AppBar(
       elevation: 0,
       backgroundColor: Colors.white,
@@ -358,234 +323,251 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
           ? SizedBox(
               height: 50,
               child: homeCtrl.buttomindex == 0
-                  ? ListView(
-                      padding: EdgeInsets.all(0),
-                      scrollDirection: Axis.horizontal,
+                  ? Row(
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              homeCtrl
-                                  .texts[
-                                      homeCtrl.currentTextIndexSelected.value]
-                                  .fontColor = Colors.black;
-                              homeCtrl
-                                  .texts[
-                                      homeCtrl.currentTextIndexSelected.value]
-                                  .fontSize = 24;
-                              homeCtrl
-                                  .texts[
-                                      homeCtrl.currentTextIndexSelected.value]
-                                  .fontDegree = 100;
-                              homeCtrl
-                                  .texts[
-                                      homeCtrl.currentTextIndexSelected.value]
-                                  .fontStyle = FontStyle.normal;
-                              homeCtrl
-                                  .texts[
-                                      homeCtrl.currentTextIndexSelected.value]
-                                  .top = 0;
-                              homeCtrl
-                                  .texts[
-                                      homeCtrl.currentTextIndexSelected.value]
-                                  .left = 0;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.restore_page,
-                            color: Colors.black,
-                          ),
-                          tooltip: "Reset",
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              Get.defaultDialog(
-                                  content: Container(
-                                    height: 500,
-                                    child: ColorPicker(
-                                      pickerColor: pickedColor,
-                                      onColorChanged: (value) {
-                                        setState(() {
-                                          homeCtrl
-                                                  .texts[homeCtrl
-                                                      .currentTextIndexSelected
-                                                      .value]
-                                                  .fontColor =
-                                              HexColor.fromHex(value.toHex());
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        homeCtrl.changeColor(pickedColor);
-                                        Get.back();
-                                      },
-                                      child: Text(
-                                        "افزودن",
-                                        style: TextStyle(
-                                            fontFamily: "fontFamily2",
-                                            fontSize: 24,
-                                            color: pickedColor,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )
-                                  ]);
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.color_lens_outlined,
-                            color: Colors.black,
-                          ),
-                          tooltip: "Edit Color",
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              homeCtrl.buttomindex = 1;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.add,
-                            color: Colors.black,
-                          ),
-                          tooltip: "Increase Font Size",
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              homeCtrl.buttomindex = 2;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.rotate_left,
-                            color: Colors.black,
-                          ),
-                          tooltip: "Text Rotate",
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              homeCtrl
-                                  .texts[
-                                      homeCtrl.currentTextIndexSelected.value]
-                                  .textAlign = TextAlign.left;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.format_align_left,
-                            color: Colors.black,
-                          ),
-                          tooltip: "Align Left",
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              homeCtrl
-                                  .texts[
-                                      homeCtrl.currentTextIndexSelected.value]
-                                  .textAlign = TextAlign.center;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.format_align_center,
-                            color: Colors.black,
-                          ),
-                          tooltip: "Align Center",
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              homeCtrl
-                                  .texts[
-                                      homeCtrl.currentTextIndexSelected.value]
-                                  .textAlign = TextAlign.right;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.format_align_right,
-                            color: Colors.black,
-                          ),
-                          tooltip: "Align Right",
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (homeCtrl
+                        Expanded(
+                          child: ListView(
+                            padding: EdgeInsets.all(0),
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    homeCtrl
+                                        .texts[homeCtrl
+                                            .currentTextIndexSelected.value]
+                                        .fontColor = Colors.black;
+                                    homeCtrl
+                                        .texts[homeCtrl
+                                            .currentTextIndexSelected.value]
+                                        .fontSize = 24;
+                                    homeCtrl
+                                        .texts[homeCtrl
+                                            .currentTextIndexSelected.value]
+                                        .fontDegree = 100;
+                                    homeCtrl
+                                        .texts[homeCtrl
+                                            .currentTextIndexSelected.value]
+                                        .fontStyle = FontStyle.normal;
+                                    homeCtrl
+                                        .texts[homeCtrl
+                                            .currentTextIndexSelected.value]
+                                        .top = 0;
+                                    homeCtrl
+                                        .texts[homeCtrl
+                                            .currentTextIndexSelected.value]
+                                        .left = 0;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.restore_page,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "Reset",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    Get.defaultDialog(
+                                        content: Container(
+                                          height: 500,
+                                          child: ColorPicker(
+                                            pickerColor: pickedColor,
+                                            onColorChanged: (value) {
+                                              setState(() {
+                                                homeCtrl
+                                                        .texts[homeCtrl
+                                                            .currentTextIndexSelected
+                                                            .value]
+                                                        .fontColor =
+                                                    HexColor.fromHex(
+                                                        value.toHex());
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              homeCtrl.changeColor(pickedColor);
+                                              Get.back();
+                                            },
+                                            child: Text(
+                                              "افزودن",
+                                              style: TextStyle(
+                                                  fontFamily: "fontFamily2",
+                                                  fontSize: 24,
+                                                  color: pickedColor,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          )
+                                        ]);
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.color_lens_outlined,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "Edit Color",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    homeCtrl.buttomindex = 1;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "Increase Font Size",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    homeCtrl.buttomindex = 2;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.rotate_left,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "Text Rotate",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    homeCtrl
+                                        .texts[homeCtrl
+                                            .currentTextIndexSelected.value]
+                                        .textAlign = TextAlign.left;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.format_align_left,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "Align Left",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    homeCtrl
+                                        .texts[homeCtrl
+                                            .currentTextIndexSelected.value]
+                                        .textAlign = TextAlign.center;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.format_align_center,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "Align Center",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    homeCtrl
+                                        .texts[homeCtrl
+                                            .currentTextIndexSelected.value]
+                                        .textAlign = TextAlign.right;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.format_align_right,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "Align Right",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (homeCtrl
+                                            .texts[homeCtrl
+                                                .currentTextIndexSelected.value]
+                                            .fontWeight ==
+                                        FontWeight.normal) {
+                                      homeCtrl
+                                          .texts[homeCtrl
+                                              .currentTextIndexSelected.value]
+                                          .fontWeight = FontWeight.bold;
+                                    } else {
+                                      homeCtrl
+                                          .texts[homeCtrl
+                                              .currentTextIndexSelected.value]
+                                          .fontWeight = FontWeight.normal;
+                                    }
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.format_bold_outlined,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "Bold",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (homeCtrl
+                                            .texts[homeCtrl
+                                                .currentTextIndexSelected.value]
+                                            .fontStyle ==
+                                        FontStyle.normal) {
+                                      homeCtrl
+                                          .texts[homeCtrl
+                                              .currentTextIndexSelected.value]
+                                          .fontStyle = FontStyle.italic;
+                                    } else {
+                                      homeCtrl
+                                          .texts[homeCtrl
+                                              .currentTextIndexSelected.value]
+                                          .fontStyle = FontStyle.normal;
+                                    }
+                                  });
+                                  print(homeCtrl
                                       .texts[homeCtrl
                                           .currentTextIndexSelected.value]
-                                      .fontWeight ==
-                                  FontWeight.normal) {
-                                homeCtrl
-                                    .texts[
-                                        homeCtrl.currentTextIndexSelected.value]
-                                    .fontWeight = FontWeight.bold;
-                              } else {
-                                homeCtrl
-                                    .texts[
-                                        homeCtrl.currentTextIndexSelected.value]
-                                    .fontWeight = FontWeight.normal;
-                              }
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.format_bold_outlined,
-                            color: Colors.black,
+                                      .fontStyle);
+                                },
+                                icon: const Icon(
+                                  Icons.format_italic,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "Italic",
+                              ),
+                              IconButton(
+                                onPressed: addLinesToText,
+                                icon: const Icon(
+                                  Icons.space_bar,
+                                  color: Colors.black,
+                                ),
+                                tooltip: "New Line",
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    homeCtrl.deleteText(homeCtrl.texts[homeCtrl
+                                        .currentTextIndexSelected.value]);
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.redAccent,
+                                ),
+                                tooltip: "Delete",
+                              ),
+                            ],
                           ),
-                          tooltip: "Bold",
                         ),
                         IconButton(
                           onPressed: () {
                             setState(() {
-                              if (homeCtrl
-                                      .texts[homeCtrl
-                                          .currentTextIndexSelected.value]
-                                      .fontStyle ==
-                                  FontStyle.normal) {
-                                homeCtrl
-                                    .texts[
-                                        homeCtrl.currentTextIndexSelected.value]
-                                    .fontStyle = FontStyle.italic;
-                              } else {
-                                homeCtrl
-                                    .texts[
-                                        homeCtrl.currentTextIndexSelected.value]
-                                    .fontStyle = FontStyle.normal;
-                              }
-                            });
-                            print(homeCtrl
-                                .texts[homeCtrl.currentTextIndexSelected.value]
-                                .fontStyle);
-                          },
-                          icon: const Icon(
-                            Icons.format_italic,
-                            color: Colors.black,
-                          ),
-                          tooltip: "Italic",
-                        ),
-                        IconButton(
-                          onPressed: addLinesToText,
-                          icon: const Icon(
-                            Icons.space_bar,
-                            color: Colors.black,
-                          ),
-                          tooltip: "New Line",
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              homeCtrl.deleteText(homeCtrl.texts[
-                                  homeCtrl.currentTextIndexSelected.value]);
+                              homeCtrl.editText = false;
                             });
                           },
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.redAccent,
-                          ),
-                          tooltip: "Delete",
-                        ),
+                          icon: Icon(Icons.done),
+                          color: Colors.blue,
+                        )
                       ],
                     )
                   : Row(
@@ -616,81 +598,96 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
               ? SizedBox(
                   height: 50,
                   child: homeCtrl.buttomindex == 0
-                      ? ListView(
-                          padding: EdgeInsets.all(0),
-                          scrollDirection: Axis.horizontal,
+                      ? Row(
                           children: [
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  homeCtrl
-                                      .images[homeCtrl
-                                          .currentImageIndexSelected.value]
-                                      .imageHeight = 50;
-                                  homeCtrl
-                                      .images[homeCtrl
-                                          .currentImageIndexSelected.value]
-                                      .imageWidth = 150;
-                                  homeCtrl
-                                      .texts[homeCtrl
-                                          .currentTextIndexSelected.value]
-                                      .fontStyle = FontStyle.normal;
-                                  homeCtrl
-                                      .texts[homeCtrl
-                                          .currentTextIndexSelected.value]
-                                      .top = 0;
-                                  homeCtrl
-                                      .texts[homeCtrl
-                                          .currentTextIndexSelected.value]
-                                      .left = 0;
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.restore_page,
-                                color: Colors.black,
-                              ),
-                              tooltip: "Reset",
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  homeCtrl.buttomindex = 1;
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.add,
-                                color: Colors.black,
-                              ),
-                              tooltip: "Increase Font Size",
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  homeCtrl.buttomindex = 2;
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.rotate_left,
-                                color: Colors.black,
-                              ),
-                              tooltip: "Image Rotate",
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  homeCtrl.deleteimage(homeCtrl.images[homeCtrl
-                                      .currentImageIndexSelected.value]);
+                            Expanded(
+                              child: ListView(
+                                padding: EdgeInsets.all(0),
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        homeCtrl
+                                            .images[homeCtrl
+                                                .currentImageIndexSelected
+                                                .value]
+                                            .imageHeight = 50;
+                                        homeCtrl
+                                            .images[homeCtrl
+                                                .currentImageIndexSelected
+                                                .value]
+                                            .imageWidth = 150;
+                                        homeCtrl
+                                            .texts[homeCtrl
+                                                .currentTextIndexSelected.value]
+                                            .fontStyle = FontStyle.normal;
+                                        homeCtrl
+                                            .texts[homeCtrl
+                                                .currentTextIndexSelected.value]
+                                            .top = 0;
+                                        homeCtrl
+                                            .texts[homeCtrl
+                                                .currentTextIndexSelected.value]
+                                            .left = 0;
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.restore_page,
+                                      color: Colors.black,
+                                    ),
+                                    tooltip: "Reset",
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        homeCtrl.buttomindex = 1;
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.add,
+                                      color: Colors.black,
+                                    ),
+                                    tooltip: "Increase Font Size",
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        homeCtrl.buttomindex = 2;
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.rotate_left,
+                                      color: Colors.black,
+                                    ),
+                                    tooltip: "Image Rotate",
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        homeCtrl.deleteimage();
 
+                                        homeCtrl.editImage = false;
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.redAccent,
+                                    ),
+                                    tooltip: "Delete",
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
                                   homeCtrl.editImage = false;
                                 });
-                                print(homeCtrl.images.length);
                               },
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.redAccent,
-                              ),
-                              tooltip: "Delete",
-                            ),
+                              icon: Icon(Icons.done),
+                              color: Colors.blue,
+                            )
                           ],
                         )
                       : Row(
@@ -699,7 +696,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
                                 flex: 9,
                                 child: homeCtrl.buttomindex == 2
                                     ? imageDegreeSlider
-                                    : fontSizeSlider),
+                                    : imageSizeSLider),
                             Expanded(
                               flex: 1,
                               child: IconButton(
@@ -884,6 +881,8 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
                     flex: 1,
                     child: InkWell(
                       onTap: () async {
+                        var decodeImage = await decodeImageFromList(
+                            await homeCtrl.image.value!.readAsBytes());
                         await homeCtrl.addNewImage(
                           XFile(homeCtrl.image.value!.path),
                           300,
@@ -893,7 +892,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
                         Get.back();
                         homeCtrl.image.value = null;
 
-                        print(homeCtrl.images[0].image.path);
+                        print(decodeImage.height);
                       },
                       child: Container(
                         alignment: Alignment.center,
@@ -919,7 +918,17 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
         });
   }
 
-  addShowModalBottomSheet(BuildContext context, Size size) {
+  pickFrame(BuildContext context, Size size) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return Container(
+            height: size.height * 0.6,
+          );
+        });
+  }
+
+  addnewText(BuildContext context, Size size) {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -971,7 +980,7 @@ class _EditorState extends State<Editor> with SingleTickerProviderStateMixin {
                             child: TextField(
                               cursorColor: Colors.black,
                               controller: homeCtrl.textController,
-                              style: style5,
+                              style: style2,
                               decoration: InputDecoration(
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide:

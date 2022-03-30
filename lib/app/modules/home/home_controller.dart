@@ -52,6 +52,7 @@ class HomeCtrl extends GetxController {
   RxInt currentTextIndexSelected = 0.obs;
   RxInt currentImageIndexSelected = 0.obs;
   RxDouble imageRotateValue = 100.0.obs;
+  RxDouble imageSizeValue = 200.0.obs;
   RxDouble fontSizeValue = 24.0.obs;
   RxDouble rotateValue = 100.0.obs;
   RxString fontFamily = "fontFamily1".obs;
@@ -71,7 +72,10 @@ class HomeCtrl extends GetxController {
         .replaceAll(":", "-");
     final name = "screenshot_$time";
     await requestPermission(Permission.storage);
-    await ImageGallerySaver.saveImage(bytes, name: name);
+    await ImageGallerySaver.saveImage(
+      bytes,
+      name: name,
+    );
   }
 
   Future<bool> requestPermission(Permission permission) async {
@@ -179,8 +183,8 @@ class HomeCtrl extends GetxController {
     texts.remove(text);
   }
 
-  deleteimage(ImageModel image) {
-    images.remove(image);
+  deleteimage() {
+    images.removeAt(currentImageIndexSelected.value);
   }
 
   void rotateImage(double value) {
@@ -193,6 +197,11 @@ class HomeCtrl extends GetxController {
 
   void changeFontSize(double fontSize) {
     texts[currentTextIndexSelected.value].fontSize = fontSize;
+  }
+
+  void changeImageSize(double imageSize) {
+    images[currentImageIndexSelected.value].imageHeight = imageSize;
+    images[currentImageIndexSelected.value].imageWidth = imageSize;
   }
 
   void setCurrentImageIndex(index) {

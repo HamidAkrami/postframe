@@ -58,6 +58,15 @@ TextStyle get style7 {
       color: Colors.white);
 }
 
+TextStyle get style8 {
+  return const TextStyle(
+    fontFamily: "fontFamily6",
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+    fontSize: 20,
+  );
+}
+
 TextStyle get font1 {
   return const TextStyle(
       fontFamily: "fontFamily1", fontSize: 20, fontWeight: FontWeight.bold);
