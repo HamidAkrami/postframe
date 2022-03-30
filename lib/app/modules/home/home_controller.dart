@@ -6,10 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:post_frame/app/core/values/theme_styles.dart';
 import 'package:post_frame/app/data/models/image_model.dart';
+import 'package:post_frame/app/data/models/project_model.dart';
 import 'package:post_frame/app/data/models/text_model.dart';
 import 'package:post_frame/app/data/services/storage/repository.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,6 +31,7 @@ class HomeCtrl extends GetxController {
     {"Text": "سلام", "fontFamily": "fontFamily5"},
     {"Text": "سلام", "fontFamily": "fontFamily6"},
   ];
+  late GetStorage box;
   final textController = TextEditingController();
   final screenShotController = ScreenshotController();
   final tabIndex = 0.obs;
@@ -58,6 +61,17 @@ class HomeCtrl extends GetxController {
   RxString fontFamily = "fontFamily1".obs;
   RxString pickedColor = "ff020202".obs;
   String savedImagePath = "";
+
+  ///////////////////////
+  final projects = <ProjectModel>[].obs;
+  @override
+  void onInit() {
+    super.onInit();
+    box = GetStorage();
+    loadProjects();
+  }
+
+  ////////////////////////////////
 
   saveToGallery() {
     screenShotController.capture().then((Uint8List? image) {
@@ -238,5 +252,52 @@ class HomeCtrl extends GetxController {
 
   pickImage() async {
     image.value = await _picker.pickImage(source: ImageSource.gallery);
+  }
+
+  ////////////////////////////////
+  saveProject() async {
+    TextEditingController textEditingController = TextEditingController();
+    Get.bottomSheet(Container(
+      height: 100,
+      color: Colors.white,
+      padding: EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          Expanded(
+              child: TextField(
+            controller: textEditingController,
+          )),
+          IconButton(
+              onPressed: () async {
+                Get.back();
+                // String projectCoverImagePath = await saveAsImage(false);
+                ProjectModel projectModel = ProjectModel(
+                    title: textEditingController.text,
+                    projectCoverImagePath: "projectCoverImagePath",
+                    images: images,
+                    texts: texts);
+                box.write(projectModel.title!, jsonEncode(projectModel));
+                // saveStatus.value = StateStatus.SUCCESS;
+                Get.snackbar('', 'پروژه ذخیره شد',
+                    backgroundColor: Colors.black.withOpacity(0.5),
+                    colorText: Colors.white);
+              },
+              icon: const Icon(
+                Icons.save,
+                color: Colors.purple,
+              ))
+        ],
+      ),
+    ));
+  }
+
+  loadProjects() {
+    projects.clear();
+    int i = 0;
+    for (String item in box.getKeys()) {
+      projects.add(ProjectModel.fromJson(json.decode(box.read(item))));
+      print(projects[i].title!);
+      i++;
+    }
   }
 }

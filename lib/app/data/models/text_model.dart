@@ -4,13 +4,15 @@ class TextModel {
   String? text;
   String? fontFamily;
   Color? fontColor;
-  double top;
-  double left;
-  TextAlign textAlign;
-  FontStyle fontStyle;
-  FontWeight fontWeight;
-  double fontSize;
-  double fontDegree;
+  double? top;
+  double? left;
+  TextAlign? textAlign;
+  FontStyle? fontStyle;
+  FontWeight? fontWeight;
+  double? fontSize;
+  double? fontDegree;
+
+  String? colorStr;
 
   TextModel(
       {required this.fontSize,
@@ -23,4 +25,26 @@ class TextModel {
       required this.top,
       required this.textAlign,
       required this.fontDegree});
+
+  TextModel.fromJson(Map<String, dynamic> json) {
+    text = json['text'];
+    fontFamily = json['fontFamily'];
+    colorStr = json['colorStr'];
+    top = json['top'];
+    left = json['left'];
+    fontSize = json['fontSize'];
+    fontDegree = json['fontDegree'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['text'] = text;
+    data['fontFamily'] = fontFamily;
+    data['colorStr'] = colorStr;
+    data['top'] = top;
+    data['left'] = left;
+    data['fontSize'] = fontSize;
+    data['fontDegree'] = fontDegree;
+    return data;
+  }
 }

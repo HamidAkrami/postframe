@@ -36,7 +36,8 @@ class AddProjct extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Get.to(PickFrame());
+        // Get.to(PickFrame());
+        Get.to(Editor());
       },
     );
   }

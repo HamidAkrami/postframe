@@ -100,7 +100,7 @@ class _EditorState extends State<Editor> {
                                     homeCtrl.dragOpacity = false;
                                   },
                                   feedback: Transform.rotate(
-                                      angle: homeCtrl.images[j].imageDegree /
+                                      angle: homeCtrl.images[j].imageDegree! /
                                           15.93,
                                       child: PickedImage(
                                           image: homeCtrl.images[j])),
@@ -108,18 +108,18 @@ class _EditorState extends State<Editor> {
                                       ? Opacity(
                                           opacity: 0.2,
                                           child: Transform.rotate(
-                                            angle:
-                                                homeCtrl.images[j].imageDegree /
-                                                    15.93,
+                                            angle: homeCtrl
+                                                    .images[j].imageDegree! /
+                                                15.93,
                                             child: PickedImage(
                                                 image: homeCtrl.images[j]),
                                           ))
                                       : Opacity(
                                           opacity: 1,
                                           child: Transform.rotate(
-                                            angle:
-                                                homeCtrl.images[j].imageDegree /
-                                                    15.93,
+                                            angle: homeCtrl
+                                                    .images[j].imageDegree! /
+                                                15.93,
                                             child: PickedImage(
                                                 image: homeCtrl.images[j]),
                                           ))))),
@@ -156,13 +156,13 @@ class _EditorState extends State<Editor> {
                                 });
                               },
                               feedback: Transform.rotate(
-                                angle: homeCtrl.texts[i].fontDegree / 15.93,
+                                angle: homeCtrl.texts[i].fontDegree! / 15.93,
                                 child: ImageText(
                                   textModel: homeCtrl.texts[i],
                                 ),
                               ),
                               child: Transform.rotate(
-                                angle: homeCtrl.texts[i].fontDegree / 15.93,
+                                angle: homeCtrl.texts[i].fontDegree! / 15.93,
                                 child: ImageText(
                                   textModel: homeCtrl.texts[i],
                                 ),
@@ -223,7 +223,8 @@ class _EditorState extends State<Editor> {
               Expanded(
                   child: InkWell(
                 onTap: () {
-                  homeCtrl.saveToGallery();
+                  // homeCtrl.saveToGallery();
+                  homeCtrl.saveProject();
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -271,7 +272,7 @@ class _EditorState extends State<Editor> {
           divisions: 1000,
           label: homeCtrl.imageSizeValue.value.round().toString(),
           value: homeCtrl
-              .images[homeCtrl.currentImageIndexSelected.value].imageHeight,
+              .images[homeCtrl.currentImageIndexSelected.value].imageHeight!,
           onChanged: (value) {
             setState(() {
               homeCtrl.changeImageSize(value);
@@ -307,7 +308,7 @@ class _EditorState extends State<Editor> {
           divisions: 150,
           label: homeCtrl.fontSizeValue.value.round().toString(),
           value:
-              homeCtrl.texts[homeCtrl.currentTextIndexSelected.value].fontSize,
+              homeCtrl.texts[homeCtrl.currentTextIndexSelected.value].fontSize!,
           onChanged: (value) {
             setState(() {
               homeCtrl.changeFontSize(value);
