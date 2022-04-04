@@ -76,6 +76,11 @@ TextStyle get style9 {
   );
 }
 
+TextStyle get style10 {
+  return const TextStyle(
+      fontFamily: "fontFamily2", fontSize: 20, fontWeight: FontWeight.bold);
+}
+
 TextStyle get font1 {
   return const TextStyle(
       fontFamily: "fontFamily1", fontSize: 20, fontWeight: FontWeight.bold);

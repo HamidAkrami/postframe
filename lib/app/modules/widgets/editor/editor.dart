@@ -61,98 +61,87 @@ class _EditorState extends State<Editor> {
             color: Colors.grey[200],
             child: Screenshot(
               controller: homeCtrl.screenShotController,
-              child: Container(
-                height: imageHeight,
-                width: imageWidth,
-                color: HexColor.fromHex(frameColor.toString()),
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    for (var j = 0; j < homeCtrl.images.length; j++)
-                      Positioned(
-                          top: homeCtrl.images[j].top,
-                          left: homeCtrl.images[j].left,
-                          child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  homeCtrl.setCurrentImageIndex(j);
-                                  homeCtrl.editImage = true;
-                                  if (homeCtrl.editText == true) {
-                                    homeCtrl.editText = false;
-                                  }
-                                  print(homeCtrl.images[homeCtrl
-                                      .currentImageIndexSelected.value]);
-                                });
-                              },
-                              child: Draggable(
-                                  onDragStarted: () {
-                                    setState(() {
-                                      homeCtrl.setCurrentImageIndex(j);
-                                      homeCtrl.dragOpacity = true;
-                                      homeCtrl.setCurrentImageIndex(j);
-                                      homeCtrl.editImage = true;
-                                      if (homeCtrl.editText == true) {
-                                        homeCtrl.editText = false;
-                                      }
-                                    });
-                                  },
-                                  onDragEnd: (details) {
-                                    final renderBox =
-                                        context.findRenderObject() as RenderBox;
-                                    Offset off =
-                                        renderBox.globalToLocal(details.offset);
-                                    setState(() {
+              child: LayoutBuilder(builder: (ctx, constratint) {
+                return Container(
+                  height: imageHeight,
+                  width: imageWidth,
+                  color: HexColor.fromHex(frameColor.toString()),
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      for (var j = 0; j < homeCtrl.images.length; j++)
+                        Positioned(
+                            top: homeCtrl.images[j].top,
+                            left: homeCtrl.images[j].left,
+                            child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    homeCtrl.setCurrentImageIndex(j);
+                                    homeCtrl.editImage = true;
+                                    if (homeCtrl.editText == true) {
+                                      homeCtrl.editText = false;
+                                    }
+                                    print(homeCtrl.images[homeCtrl
+                                        .currentImageIndexSelected.value]);
+                                  });
+                                },
+                                child: Draggable(
+                                    onDragStarted: () {
+                                      setState(() {
+                                        homeCtrl.setCurrentImageIndex(j);
+                                        homeCtrl.dragOpacity = true;
+                                        homeCtrl.setCurrentImageIndex(j);
+                                        homeCtrl.editImage = true;
+                                        if (homeCtrl.editText == true) {
+                                          homeCtrl.editText = false;
+                                        }
+                                      });
+                                    },
+                                    onDragEnd: (details) {
+                                      final renderBox =
+                                          ctx.findRenderObject() as RenderBox;
+                                      Offset off = renderBox
+                                          .globalToLocal(details.offset);
+                                      setState(() {
+                                        homeCtrl.dragOpacity = false;
+                                        homeCtrl.images[j].top = off.dy;
+                                        homeCtrl.images[j].left = off.dx;
+                                      });
+                                    },
+                                    onDraggableCanceled: (velocity, offset) {
                                       homeCtrl.dragOpacity = false;
-                                      homeCtrl.images[j].top =
-                                          off.dy - size.height * 0.127;
-                                      homeCtrl.images[j].left = off.dx;
-                                    });
-                                  },
-                                  onDraggableCanceled: (velocity, offset) {
-                                    homeCtrl.dragOpacity = false;
-                                  },
-                                  feedback: Transform.rotate(
-                                      angle: homeCtrl.images[j].imageDegree /
-                                          15.93,
-                                      child: PickedImage(
-                                          image: homeCtrl.images[j])),
-                                  child: homeCtrl.dragOpacity == true
-                                      ? Opacity(
-                                          opacity: 0.2,
-                                          child: Transform.rotate(
-                                            angle:
-                                                homeCtrl.images[j].imageDegree /
-                                                    15.93,
-                                            child: PickedImage(
-                                                image: homeCtrl.images[j]),
-                                          ))
-                                      : Opacity(
-                                          opacity: 1,
-                                          child: Transform.rotate(
-                                            angle:
-                                                homeCtrl.images[j].imageDegree /
-                                                    15.93,
-                                            child: PickedImage(
-                                                image: homeCtrl.images[j]),
-                                          ))))),
-                    for (var i = 0; i < homeCtrl.texts.length; i++)
-                      Positioned(
-                          top: homeCtrl.texts[i].top,
-                          left: homeCtrl.texts[i].left,
-                          child: GestureDetector(
-                            onLongPress: () {},
-                            onTap: () {
-                              setState(() {
-                                homeCtrl.setCurrentTextIndex(i);
-                                homeCtrl.editText = true;
-                                if (homeCtrl.editImage == true) {
-                                  homeCtrl.editImage = false;
-                                }
-                              });
-                              print(homeCtrl.currentTextIndexSelected.value);
-                            },
-                            child: Draggable(
-                              onDragStarted: () {
+                                    },
+                                    feedback: Transform.rotate(
+                                        angle: homeCtrl.images[j].imageDegree /
+                                            15.93,
+                                        child: PickedImage(
+                                            image: homeCtrl.images[j])),
+                                    child: homeCtrl.dragOpacity == true
+                                        ? Opacity(
+                                            opacity: 0.2,
+                                            child: Transform.rotate(
+                                              angle: homeCtrl
+                                                      .images[j].imageDegree /
+                                                  15.93,
+                                              child: PickedImage(
+                                                  image: homeCtrl.images[j]),
+                                            ))
+                                        : Opacity(
+                                            opacity: 1,
+                                            child: Transform.rotate(
+                                              angle: homeCtrl
+                                                      .images[j].imageDegree /
+                                                  15.93,
+                                              child: PickedImage(
+                                                  image: homeCtrl.images[j]),
+                                            ))))),
+                      for (var i = 0; i < homeCtrl.texts.length; i++)
+                        Positioned(
+                            top: homeCtrl.texts[i].top,
+                            left: homeCtrl.texts[i].left,
+                            child: GestureDetector(
+                              onLongPress: () {},
+                              onTap: () {
                                 setState(() {
                                   homeCtrl.setCurrentTextIndex(i);
                                   homeCtrl.editText = true;
@@ -162,40 +151,52 @@ class _EditorState extends State<Editor> {
                                 });
                                 print(homeCtrl.currentTextIndexSelected.value);
                               },
-                              onDraggableCanceled: (_, __) {
-                                setState(() {
-                                  homeCtrl.deleteTextItem = false;
-                                });
-                              },
-                              feedback: Transform.rotate(
-                                angle: homeCtrl.texts[i].fontDegree / 15.93,
-                                child: ImageText(
-                                  textModel: homeCtrl.texts[i],
+                              child: Draggable(
+                                onDragStarted: () {
+                                  setState(() {
+                                    homeCtrl.setCurrentTextIndex(i);
+                                    homeCtrl.editText = true;
+                                    if (homeCtrl.editImage == true) {
+                                      homeCtrl.editImage = false;
+                                    }
+                                  });
+                                  print(
+                                      homeCtrl.currentTextIndexSelected.value);
+                                },
+                                onDraggableCanceled: (_, __) {
+                                  setState(() {
+                                    homeCtrl.deleteTextItem = false;
+                                  });
+                                },
+                                feedback: Transform.rotate(
+                                  angle: homeCtrl.texts[i].fontDegree / 15.93,
+                                  child: ImageText(
+                                    textModel: homeCtrl.texts[i],
+                                  ),
                                 ),
-                              ),
-                              child: Transform.rotate(
-                                angle: homeCtrl.texts[i].fontDegree / 15.93,
-                                child: ImageText(
-                                  textModel: homeCtrl.texts[i],
+                                child: Transform.rotate(
+                                  angle: homeCtrl.texts[i].fontDegree / 15.93,
+                                  child: ImageText(
+                                    textModel: homeCtrl.texts[i],
+                                  ),
                                 ),
+                                onDragEnd: (details) {
+                                  final renderBox =
+                                      ctx.findRenderObject() as RenderBox;
+                                  Offset off =
+                                      renderBox.globalToLocal(details.offset);
+                                  setState(() {
+                                    homeCtrl.deleteTextItem = false;
+                                    homeCtrl.texts[i].top = off.dy;
+                                    homeCtrl.texts[i].left = off.dx;
+                                  });
+                                },
                               ),
-                              onDragEnd: (details) {
-                                final renderBox =
-                                    context.findRenderObject() as RenderBox;
-                                Offset off =
-                                    renderBox.globalToLocal(details.offset);
-                                setState(() {
-                                  homeCtrl.deleteTextItem = false;
-                                  homeCtrl.texts[i].top =
-                                      off.dy - size.height * 0.127;
-                                  homeCtrl.texts[i].left = off.dx;
-                                });
-                              },
-                            ),
-                          ))
-                  ],
-                ),
-              ),
+                            ))
+                    ],
+                  ),
+                );
+              }),
             ),
           ),
         ),
@@ -748,7 +749,10 @@ class _EditorState extends State<Editor> {
                   ListTile(
                     key: Key('$index'),
                     // tileColor: _items[index].isOdd ? oddItemColor : evenItemColor,
-                    title: Text('Image ${index + 1}'),
+                    title: Text(
+                      'تصویر ${index + 1}',
+                      style: style10,
+                    ),
                   ),
               ],
               onReorder: (int oldIndex, int newIndex) {
@@ -780,37 +784,6 @@ class _EditorState extends State<Editor> {
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 50),
-                                    decoration: BoxDecoration(
-                                        color: kGreenDark,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.filter_frames,
-                                          color: Colors.white,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 8.0, right: 5),
-                                          child: Text(
-                                            "قاب ها",
-                                            style: style7,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
@@ -847,7 +820,10 @@ class _EditorState extends State<Editor> {
                               ),
                               Expanded(
                                 child: InkWell(
-                                  onTap: () {},
+                                  onTap: () async {
+                                    await homeCtrl.camera();
+                                    setState(() {});
+                                  },
                                   child: Container(
                                       margin: EdgeInsets.symmetric(
                                           horizontal: 20, vertical: 50),
@@ -893,8 +869,6 @@ class _EditorState extends State<Editor> {
                     flex: 1,
                     child: InkWell(
                       onTap: () async {
-                        var decodeImage = await decodeImageFromList(
-                            await homeCtrl.image.value!.readAsBytes());
                         await homeCtrl.addNewImage(
                           XFile(homeCtrl.image.value!.path),
                           300,
@@ -903,8 +877,6 @@ class _EditorState extends State<Editor> {
                         setState(() {});
                         Get.back();
                         homeCtrl.image.value = null;
-
-                        print(decodeImage.height);
                       },
                       child: Container(
                         alignment: Alignment.center,

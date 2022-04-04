@@ -74,6 +74,7 @@ class HomeCtrl extends GetxController {
 
   final image = Rx<XFile?>(null);
   final frame = Rx<XFile?>(null);
+  final cameraImage = Rx<XFile?>(null);
   GlobalKey globalKey = new GlobalKey();
   bool deleteTextItem = false;
   bool fontSizeSelected = false;
@@ -97,6 +98,7 @@ class HomeCtrl extends GetxController {
   double? imageHeight;
   double? imageWidth;
   RxString? editorColor;
+  RxInt frameSelected = (-1).obs;
 
   saveToGallery() {
     screenShotController.capture().then((Uint8List? image) {
@@ -281,5 +283,9 @@ class HomeCtrl extends GetxController {
 
   pickImage() async {
     image.value = await _picker.pickImage(source: ImageSource.gallery);
+  }
+
+  camera() async {
+    image.value = await _picker.pickImage(source: ImageSource.camera);
   }
 }

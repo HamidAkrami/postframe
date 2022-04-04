@@ -49,11 +49,12 @@ class _PickFrameState extends State<PickFrame> {
                     return GestureDetector(
                         onTap: () {
                           setState(() {
+                            homeCtrl.frameSelected.value = index;
                             if (index == 0) {
                               homeCtrl.imageHeight = size.height * 0.5;
                               homeCtrl.imageWidth = size.width * 0.6;
                             } else if (index == 1) {
-                              homeCtrl.imageHeight = size.height * 0.2;
+                              homeCtrl.imageHeight = size.height * 0.3;
                               homeCtrl.imageWidth = Get.width;
                             } else if (index == 2) {
                               homeCtrl.imageHeight = size.height * 0.4;
@@ -62,13 +63,15 @@ class _PickFrameState extends State<PickFrame> {
                               homeCtrl.imageHeight = size.height * 0.4;
                               homeCtrl.imageWidth = size.width * 0.8;
                             } else if (index == 4) {
-                              homeCtrl.imageHeight = size.height * 0.3;
-                              homeCtrl.imageWidth = size.width * 0.3;
+                              homeCtrl.imageHeight = size.height * 0.2;
+                              homeCtrl.imageWidth = size.width * 0.4;
                             }
                           });
                         },
-                        child:
-                            FrameSize(frameModel: homeCtrl.frameList[index]));
+                        child: FrameSize(
+                          frameModel: homeCtrl.frameList[index],
+                          isSelected: homeCtrl.frameSelected.value == index,
+                        ));
                   })),
           Expanded(
               child: Padding(
@@ -206,13 +209,16 @@ class _PickFrameState extends State<PickFrame> {
 }
 
 class FrameSize extends StatelessWidget {
-  FrameSize({Key? key, required this.frameModel}) : super(key: key);
+  FrameSize({Key? key, required this.frameModel, required this.isSelected})
+      : super(key: key);
   final FrameModel frameModel;
+  bool isSelected;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 150,
-      color: Colors.grey[200],
+      color: isSelected ? Colors.grey[400] : Colors.grey[200],
       margin: EdgeInsets.symmetric(horizontal: 5),
       alignment: Alignment.center,
       child: Column(

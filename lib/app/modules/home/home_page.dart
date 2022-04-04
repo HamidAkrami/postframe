@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:post_frame/app/core/values/theme_styles.dart';
 import 'package:post_frame/app/modules/widgets/editor/editor_page.dart';
 import 'package:post_frame/app/modules/home/home_controller.dart';
 import 'package:post_frame/app/modules/widgets/home_details/add_projct.dart';
@@ -12,12 +13,7 @@ class HomePage extends GetView<HomeCtrl> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
-      ),
-      drawer: Drawer(
-        child: Container(
-          color: Colors.orange[400],
-        ),
+        backgroundColor: kGreenDark,
       ),
       backgroundColor: Colors.grey[250],
       body: Center(
@@ -36,12 +32,6 @@ class HomePage extends GetView<HomeCtrl> {
               ),
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              color: Colors.red,
-            ),
-          )
         ],
       )),
     );
