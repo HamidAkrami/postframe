@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:get/get.dart';
 import 'package:post_frame/app/core/values/theme_styles.dart';
+import 'package:post_frame/app/core/utils/extention.dart';
+import 'package:post_frame/app/data/models/frame_model.dart';
+import 'package:post_frame/app/modules/home/home_controller.dart';
+import 'package:post_frame/app/core/values/theme_styles.dart';
+import 'package:post_frame/app/modules/widgets/editor/editor.dart';
 
 class PickFrame extends StatefulWidget {
   const PickFrame({Key? key}) : super(key: key);
@@ -9,228 +16,220 @@ class PickFrame extends StatefulWidget {
 }
 
 class _PickFrameState extends State<PickFrame> {
+  final homeCtrl = Get.find<HomeCtrl>();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: kBlueDark,
       body: Column(
         children: [
-          SizedBox(),
           Expanded(
-              flex: 1,
               child: Padding(
-                padding: const EdgeInsets.only(top: 26.0),
-                child: Text(
-                  "اندازه قاب",
-                  style: style8,
-                ),
-              )),
+            padding: EdgeInsets.only(top: 15),
+            child: Text(
+              "انتخاب قاب",
+              style: style9,
+            ),
+          )),
           Expanded(
-              flex: 2,
+              child: Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Text(
+              "سایز قاب",
+              style: style8,
+            ),
+          )),
+          Expanded(
+              flex: 3,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: homeCtrl.frameList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (index == 0) {
+                              homeCtrl.imageHeight = size.height * 0.5;
+                              homeCtrl.imageWidth = size.width * 0.6;
+                            } else if (index == 1) {
+                              homeCtrl.imageHeight = size.height * 0.2;
+                              homeCtrl.imageWidth = Get.width;
+                            } else if (index == 2) {
+                              homeCtrl.imageHeight = size.height * 0.4;
+                              homeCtrl.imageWidth = size.width * 0.7;
+                            } else if (index == 3) {
+                              homeCtrl.imageHeight = size.height * 0.4;
+                              homeCtrl.imageWidth = size.width * 0.8;
+                            } else if (index == 4) {
+                              homeCtrl.imageHeight = size.height * 0.3;
+                              homeCtrl.imageWidth = size.width * 0.3;
+                            }
+                          });
+                        },
+                        child:
+                            FrameSize(frameModel: homeCtrl.frameList[index]));
+                  })),
+          Expanded(
+              child: Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Text(
+              "نوع قاب",
+              style: style8,
+            ),
+          )),
+          Expanded(
+              flex: 3,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(4)),
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "استوری",
-                            style: style8,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            height: 160,
-                            width: 90,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Text("16:9"),
-                        )),
-                      ],
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    alignment: Alignment.center,
+                    color: Colors.grey[200],
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.white,
                     ),
                   ),
                   Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(4)),
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "استوری",
-                            style: style8,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            height: 160,
-                            width: 90,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Text("16:9"),
-                        )),
-                      ],
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    alignment: Alignment.center,
+                    color: Colors.grey[200],
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.white,
                     ),
                   ),
                   Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(4)),
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "استوری",
-                            style: style8,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            height: 160,
-                            width: 90,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Text("16:9"),
-                        )),
-                      ],
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    alignment: Alignment.center,
+                    color: Colors.grey[200],
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.white,
                     ),
                   ),
                   Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(4)),
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "استوری",
-                            style: style8,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            height: 160,
-                            width: 90,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Text("16:9"),
-                        )),
-                      ],
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    alignment: Alignment.center,
+                    color: Colors.grey[200],
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.white,
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(4)),
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "استوری",
-                            style: style8,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            height: 160,
-                            width: 90,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Text("16:9"),
-                        )),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(4)),
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "استوری",
-                            style: style8,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            height: 160,
-                            width: 90,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Text("16:9"),
-                        )),
-                      ],
-                    ),
-                  )
                 ],
               )),
-          SizedBox(
-            height: 50,
-          ),
           Expanded(
-              child: Text(
-            "طرح قاب",
-            style: style8,
+              child: Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Text(
+              "رنگ قاب",
+              style: style8,
+            ),
           )),
           Expanded(
-              child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.grey[200]),
-                child: Container(
+              child: GestureDetector(
+            onTap: () {
+              Get.defaultDialog(
+                  content: Container(
+                    height: size.height * 0.6,
+                    child: ColorPicker(
+                      pickerColor: homeCtrl.pickedFrameColor,
+                      onColorChanged: changeColor,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        homeCtrl.changeFrameColor(homeCtrl.pickedFrameColor);
+                        Get.back();
+                      },
+                      child: Text(
+                        "افزودن",
+                        style: TextStyle(
+                            fontFamily: "fontFamily2",
+                            fontSize: 24,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ]);
+            },
+            child: Obx(
+              () => Container(
+                alignment: Alignment.center,
+                color: HexColor.fromHex(homeCtrl.frameColor.toString()),
+                child: Icon(
+                  Icons.color_lens,
                   color: Colors.white,
-                  padding: EdgeInsets.all(10),
-                  width: 90,
-                  height: 160,
                 ),
               ),
-            ],
+            ),
+          )),
+          Expanded(
+              child: GestureDetector(
+            onTap: () {
+              if (homeCtrl.imageHeight != null || homeCtrl.imageWidth != null) {
+                Get.to(Editor(), arguments: [
+                  homeCtrl.imageHeight,
+                  homeCtrl.imageWidth,
+                  homeCtrl.frameColor.value
+                ]);
+              } else
+                return;
+            },
+            child: Container(
+              color: kGreenDark,
+              alignment: Alignment.center,
+              child: Text(
+                "حله",
+                style: style9,
+              ),
+            ),
           ))
+        ],
+      ),
+    );
+  }
+
+  void changeColor(Color color) {
+    setState(() {
+      homeCtrl.pickedFrameColor = color;
+    });
+  }
+}
+
+class FrameSize extends StatelessWidget {
+  FrameSize({Key? key, required this.frameModel}) : super(key: key);
+  final FrameModel frameModel;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 150,
+      color: Colors.grey[200],
+      margin: EdgeInsets.symmetric(horizontal: 5),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            height: frameModel.height,
+            width: frameModel.width,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: frameModel.color),
+            child: Text(
+              frameModel.size!,
+              style: style8,
+            ),
+          ),
         ],
       ),
     );

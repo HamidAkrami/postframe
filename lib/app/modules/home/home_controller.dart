@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:post_frame/app/core/values/theme_styles.dart';
+import 'package:post_frame/app/data/models/frame_model.dart';
 import 'package:post_frame/app/data/models/image_model.dart';
 import 'package:post_frame/app/data/models/text_model.dart';
 import 'package:post_frame/app/data/services/storage/repository.dart';
@@ -29,6 +30,39 @@ class HomeCtrl extends GetxController {
     {"Text": "سلام", "fontFamily": "fontFamily5"},
     {"Text": "سلام", "fontFamily": "fontFamily6"},
   ];
+  final frameList = <FrameModel>[
+    FrameModel(
+        title: "استوری",
+        size: "16:9",
+        height: 160,
+        width: 90,
+        color: HexColor.fromHex("ffffffff")),
+    FrameModel(
+        title: "پست",
+        size: "9:16",
+        height: 90,
+        width: 160,
+        color: HexColor.fromHex("ffffffff")),
+    FrameModel(
+        title: "استوری",
+        size: "4:3",
+        height: 80,
+        width: 60,
+        color: HexColor.fromHex("ffffffff")),
+    FrameModel(
+        title: "استوری",
+        size: "3:4",
+        height: 60,
+        width: 80,
+        color: HexColor.fromHex("ffffffff")),
+    FrameModel(
+        title: "استوری",
+        size: "1:1",
+        height: 100,
+        width: 100,
+        color: HexColor.fromHex("ffffffff")),
+  ];
+
   final textController = TextEditingController();
   final screenShotController = ScreenshotController();
   final tabIndex = 0.obs;
@@ -57,7 +91,12 @@ class HomeCtrl extends GetxController {
   RxDouble rotateValue = 100.0.obs;
   RxString fontFamily = "fontFamily1".obs;
   RxString pickedColor = "ff020202".obs;
+  RxString frameColor = "ff5555fa".obs;
+  Color pickedFrameColor = kBlueLight;
   String savedImagePath = "";
+  double? imageHeight;
+  double? imageWidth;
+  RxString? editorColor;
 
   saveToGallery() {
     screenShotController.capture().then((Uint8List? image) {
@@ -214,6 +253,10 @@ class HomeCtrl extends GetxController {
 
   void changeColor(Color color) {
     pickedColor.value = color.toHex();
+  }
+
+  void changeFrameColor(Color color) {
+    frameColor.value = color.toHex();
   }
 
   replaceColor(Color pickedColor) {

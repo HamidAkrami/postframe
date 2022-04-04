@@ -13,13 +13,25 @@ import 'package:post_frame/app/modules/widgets/editor/editor_details/image_text.
 import 'package:screenshot/screenshot.dart';
 
 class Editor extends StatefulWidget {
-  const Editor({Key? key}) : super(key: key);
-
+  Editor({Key? key}) : super(key: key);
   @override
   State<Editor> createState() => _EditorState();
 }
 
 class _EditorState extends State<Editor> {
+  double? imageHeight;
+  double? imageWidth;
+  String? frameColor;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    imageHeight = Get.arguments[0];
+    imageWidth = Get.arguments[1];
+    frameColor = Get.arguments[2];
+  }
+
   final homeCtrl = Get.find<HomeCtrl>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Color color = Colors.black;
@@ -46,13 +58,13 @@ class _EditorState extends State<Editor> {
           },
           child: Container(
             alignment: Alignment.center,
-            color: Colors.transparent,
+            color: Colors.grey[200],
             child: Screenshot(
               controller: homeCtrl.screenShotController,
               child: Container(
-                height: 250,
-                width: Get.width,
-                color: Colors.red,
+                height: imageHeight,
+                width: imageWidth,
+                color: HexColor.fromHex(frameColor.toString()),
                 child: Stack(
                   alignment: Alignment.topCenter,
                   children: [
