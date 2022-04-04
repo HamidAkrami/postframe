@@ -121,10 +121,11 @@ class HomeCtrl extends GetxController {
   //     saveImage(image!);
   //   }).catchError((err) => print(err));
   // }
-  deleteProject(ProjectModel item){
+  deleteProject(ProjectModel item) {
     projects.remove(item);
     box.remove(item.title!);
   }
+
   Future<String> saveImage() async {
     Uint8List? image = await screenShotController.capture();
     LinkedHashMap<dynamic, dynamic> savedImage =
@@ -312,7 +313,8 @@ class HomeCtrl extends GetxController {
 
   camera() async {
     image.value = await _picker.pickImage(source: ImageSource.camera);
-  ////////////////////////////////
+  }
+
   saveProject() async {
     TextEditingController textEditingController = TextEditingController();
     final _formKey = GlobalKey<FormState>();
@@ -342,8 +344,8 @@ class HomeCtrl extends GetxController {
                   if (_formKey.currentState!.validate()) {
                     Get.back();
                     String projectCoverImagePath = await saveImage();
-                    final filePath =
-                    await FlutterAbsolutePath.getAbsolutePath(projectCoverImagePath);
+                    final filePath = await FlutterAbsolutePath.getAbsolutePath(
+                        projectCoverImagePath);
                     ProjectModel projectModel = ProjectModel(
                         title: textEditingController.text,
                         projectCoverImagePath: filePath,

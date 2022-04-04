@@ -112,7 +112,7 @@ class _EditorState extends State<Editor> {
                                       homeCtrl.dragOpacity = false;
                                     },
                                     feedback: Transform.rotate(
-                                        angle: homeCtrl.images[j].imageDegree /
+                                        angle: homeCtrl.images[j].imageDegree! /
                                             15.93,
                                         child: PickedImage(
                                             image: homeCtrl.images[j])),
@@ -121,7 +121,7 @@ class _EditorState extends State<Editor> {
                                             opacity: 0.2,
                                             child: Transform.rotate(
                                               angle: homeCtrl
-                                                      .images[j].imageDegree /
+                                                      .images[j].imageDegree! /
                                                   15.93,
                                               child: PickedImage(
                                                   image: homeCtrl.images[j]),
@@ -130,7 +130,7 @@ class _EditorState extends State<Editor> {
                                             opacity: 1,
                                             child: Transform.rotate(
                                               angle: homeCtrl
-                                                      .images[j].imageDegree /
+                                                      .images[j].imageDegree! /
                                                   15.93,
                                               child: PickedImage(
                                                   image: homeCtrl.images[j]),
@@ -169,13 +169,13 @@ class _EditorState extends State<Editor> {
                                   });
                                 },
                                 feedback: Transform.rotate(
-                                  angle: homeCtrl.texts[i].fontDegree / 15.93,
+                                  angle: homeCtrl.texts[i].fontDegree! / 15.93,
                                   child: ImageText(
                                     textModel: homeCtrl.texts[i],
                                   ),
                                 ),
                                 child: Transform.rotate(
-                                  angle: homeCtrl.texts[i].fontDegree / 15.93,
+                                  angle: homeCtrl.texts[i].fontDegree! / 15.93,
                                   child: ImageText(
                                     textModel: homeCtrl.texts[i],
                                   ),
@@ -905,10 +905,10 @@ class _EditorState extends State<Editor> {
                                             Icons.camera_alt_rounded,
                                             color: Colors.white,
                                           ),
-                                        )
-                                      ],
-                                    )),
-                              ),
+                                        ],
+                                      )),
+                                ),
+                              )
                             ],
                           )
                         : Container(
