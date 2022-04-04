@@ -188,15 +188,15 @@ class _EditorState extends State<Editor> {
           ),
         ),
         bottomNavigationBar: Container(
-          height: size.height * 0.21,
+          height: 170,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           color: Colors.grey[100],
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
                       onTap: () {
@@ -220,23 +220,91 @@ class _EditorState extends State<Editor> {
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 8.0,
+              ),
               Expanded(
-                  child: InkWell(
-                onTap: () {
-                  // homeCtrl.saveToGallery();
-                  homeCtrl.saveProject();
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10), color: kGreen),
-                  child: Text(
-                    " ذخیره کردن",
-                    style: style3,
+                child: InkWell(
+                  onTap: () {
+                    Get.defaultDialog(
+                        title: 'ذخیره به صورت ',
+                        content: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.back();
+                                      homeCtrl.saveImage();
+                                    },
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 6.0),
+                                        decoration: BoxDecoration(
+                                            color: Colors.amber,
+                                            borderRadius:
+                                                BorderRadius.circular(16.0)),
+                                        child: const Center(
+                                            child: Text(
+                                          'عکس',
+                                          style: TextStyle(color: Colors.white),
+                                        ))),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 16.0,
+                                ),
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.back();
+                                      homeCtrl.saveProject();
+                                    },
+                                    child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 6.0),
+                                        decoration: BoxDecoration(
+                                            color: Colors.green.shade300,
+                                            borderRadius:
+                                                BorderRadius.circular(16.0)),
+                                        child: const Center(
+                                            child: Text(
+                                          'پروژه',
+                                          style: TextStyle(color: Colors.white),
+                                        ))),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            InkWell(
+                              onTap: () => Get.back(),
+                              child: Container(
+                                  // color: Colors.red,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 6.0),
+                                  child: const Center(child: Text('انصراف'))),
+                            ),
+                          ],
+                        ));
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10), color: kGreen),
+                    child: Text(
+                      " ذخیره کردن",
+                      style: style3,
+                    ),
                   ),
                 ),
-              ))
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
             ],
           ),
         ),
@@ -757,24 +825,55 @@ class _EditorState extends State<Editor> {
         builder: (context) {
           return StatefulBuilder(
             builder: (context, setState) => Container(
-              height: size.height * 0.4,
+              height: size.height * 0.35,
               child: Column(
                 children: [
-                  SizedBox(
-                    height: size.height * 0.03,
-                  ),
                   Expanded(
                     flex: 4,
                     child: homeCtrl.image.value == null
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 50),
+                              InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  // margin: EdgeInsets.symmetric(
+                                  //     horizontal: 20, vertical: 50),
+                                  decoration: BoxDecoration(
+                                      color: kGreenDark,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.filter_frames,
+                                        color: Colors.white,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 8.0, right: 5),
+                                        child: Text(
+                                          "قاب ها",
+                                          style: style7,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  await homeCtrl.pickImage();
+
+                                  setState(() {});
+                                },
+                                child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    // margin: EdgeInsets.symmetric(
+                                    //     horizontal: 20, vertical: 50),
                                     decoration: BoxDecoration(
                                         color: kGreenDark,
                                         borderRadius:
@@ -783,86 +882,50 @@ class _EditorState extends State<Editor> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          Icons.filter_frames,
+                                        const Icon(
+                                          Icons.image,
                                           color: Colors.white,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               top: 8.0, right: 5),
                                           child: Text(
-                                            "قاب ها",
+                                            "گالری",
                                             style: style7,
                                           ),
                                         )
                                       ],
-                                    ),
-                                  ),
-                                ),
+                                    )),
                               ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    await homeCtrl.pickImage();
-
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 50),
-                                      decoration: BoxDecoration(
-                                          color: kGreenDark,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.image,
-                                            color: Colors.white,
+                              InkWell(
+                                onTap: () {},
+                                child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    // margin: EdgeInsets.symmetric(
+                                    //     horizontal: 20, vertical: 50),
+                                    decoration: BoxDecoration(
+                                        color: kGreenDark,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.camera_alt_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 8.0, right: 5),
+                                          child: Text(
+                                            "دوربین",
+                                            style: style7,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 8.0, right: 5),
-                                            child: Text(
-                                              "گالری",
-                                              style: style7,
-                                            ),
-                                          )
-                                        ],
-                                      )),
-                                ),
-                              ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 50),
-                                      decoration: BoxDecoration(
-                                          color: kGreenDark,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.camera_alt_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 8.0, right: 5),
-                                            child: Text(
-                                              "دوربین",
-                                              style: style7,
-                                            ),
-                                          )
-                                        ],
-                                      )),
-                                ),
+                                        )
+                                      ],
+                                    )),
                               ),
                             ],
                           )
@@ -871,12 +934,6 @@ class _EditorState extends State<Editor> {
                             width: size.height * 0.3,
                             child: Image.file(File(homeCtrl.image.value!.path)),
                           ),
-                  ),
-                  SizedBox(
-                    height: size.height * 0.03,
-                  ),
-                  SizedBox(
-                    height: size.height * 0.04,
                   ),
                   Expanded(
                     flex: 1,
@@ -971,19 +1028,19 @@ class _EditorState extends State<Editor> {
                                     )
                                   ]);
                             },
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.color_lens_outlined,
                               size: 30,
                             )),
                         Expanded(
                           child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
                             child: TextField(
                               cursorColor: Colors.black,
                               controller: homeCtrl.textController,
                               style: style2,
                               decoration: InputDecoration(
-                                focusedBorder: UnderlineInputBorder(
+                                focusedBorder: const UnderlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.black)),
                                 hintStyle: style5,
@@ -1007,7 +1064,7 @@ class _EditorState extends State<Editor> {
                 Container(
                     height: size.height * 0.25,
                     child: GridView.count(
-                      padding: EdgeInsets.only(top: 0),
+                      padding: const EdgeInsets.only(top: 0),
                       crossAxisSpacing: 1.5,
                       mainAxisSpacing: 1.5,
                       crossAxisCount: 3,

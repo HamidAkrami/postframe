@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -5,6 +6,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -63,7 +65,7 @@ class HomeCtrl extends GetxController {
   String savedImagePath = "";
 
   ///////////////////////
-  final projects = <ProjectModel>[].obs;
+  List<ProjectModel> projects = <ProjectModel>[].obs;
   @override
   void onInit() {
     super.onInit();
@@ -73,23 +75,32 @@ class HomeCtrl extends GetxController {
 
   ////////////////////////////////
 
-  saveToGallery() {
-    screenShotController.capture().then((Uint8List? image) {
-      saveImage(image!);
-    }).catchError((err) => print(err));
+  // saveToGallery() {
+  //   screenShotController.capture().then((Uint8List? image) {
+  //     saveImage(image!);
+  //   }).catchError((err) => print(err));
+  // }
+  deleteProject(ProjectModel item){
+    projects.remove(item);
+    box.remove(item.title!);
   }
-
-  saveImage(Uint8List bytes) async {
-    final time = DateTime.now()
-        .toIso8601String()
-        .replaceAll(".", "-")
-        .replaceAll(":", "-");
-    final name = "screenshot_$time";
-    await requestPermission(Permission.storage);
-    await ImageGallerySaver.saveImage(
-      bytes,
-      name: name,
-    );
+  Future<String> saveImage() async {
+    Uint8List? image = await screenShotController.capture();
+    LinkedHashMap<dynamic, dynamic> savedImage =
+        LinkedHashMap<dynamic, dynamic>();
+    if (image != null) {
+      final time = DateTime.now()
+          .toIso8601String()
+          .replaceAll(".", "-")
+          .replaceAll(":", "-");
+      final name = "screenshot_$time";
+      await requestPermission(Permission.storage);
+      savedImage = await ImageGallerySaver.saveImage(
+        image,
+        name: name,
+      );
+    }
+    return savedImage["filePath"];
   }
 
   Future<bool> requestPermission(Permission permission) async {
@@ -257,39 +268,54 @@ class HomeCtrl extends GetxController {
   ////////////////////////////////
   saveProject() async {
     TextEditingController textEditingController = TextEditingController();
-    Get.bottomSheet(Container(
-      height: 100,
-      color: Colors.white,
-      padding: EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-              child: TextField(
-            textAlign: ui.TextAlign.center,
-            decoration:
-                const InputDecoration(hintText: "لطفا نام پروژه را وارد کنید"),
-            controller: textEditingController,
-          )),
-          IconButton(
-              onPressed: () async {
-                Get.back();
-                // String projectCoverImagePath = await saveAsImage(false);
-                ProjectModel projectModel = ProjectModel(
-                    title: textEditingController.text,
-                    projectCoverImagePath: "projectCoverImagePath",
-                    images: images,
-                    texts: texts);
-                box.write(projectModel.title!, jsonEncode(projectModel));
-                // saveStatus.value = StateStatus.SUCCESS;
-                Get.snackbar('', 'پروژه ذخیره شد',
-                    backgroundColor: Colors.black.withOpacity(0.5),
-                    colorText: Colors.white);
+    final _formKey = GlobalKey<FormState>();
+    Get.bottomSheet(Form(
+      key: _formKey,
+      child: Container(
+        height: 100,
+        color: Colors.white,
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Expanded(
+                child: TextFormField(
+              textAlign: ui.TextAlign.center,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'نام خالی است';
+                }
+                return null;
               },
-              icon: const Icon(
-                Icons.save,
-                color: Colors.purple,
-              ))
-        ],
+              decoration: const InputDecoration(
+                  hintText: "لطفا نام پروژه را وارد کنید"),
+              controller: textEditingController,
+            )),
+            IconButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    Get.back();
+                    String projectCoverImagePath = await saveImage();
+                    final filePath =
+                    await FlutterAbsolutePath.getAbsolutePath(projectCoverImagePath);
+                    ProjectModel projectModel = ProjectModel(
+                        title: textEditingController.text,
+                        projectCoverImagePath: filePath,
+                        images: images,
+                        texts: texts);
+                    box.write(projectModel.title!, jsonEncode(projectModel));
+                    // saveStatus.value = StateStatus.SUCCESS;
+                    Get.snackbar('', 'پروژه ذخیره شد',
+                        backgroundColor: Colors.black.withOpacity(0.5),
+                        colorText: Colors.white);
+                    loadProjects();
+                  }
+                },
+                icon: const Icon(
+                  Icons.done,
+                  color: Colors.green,
+                ))
+          ],
+        ),
       ),
     ));
   }
@@ -299,7 +325,8 @@ class HomeCtrl extends GetxController {
     int i = 0;
     for (String item in box.getKeys()) {
       projects.add(ProjectModel.fromJson(json.decode(box.read(item))));
-      print(projects[i].title!);
+      print(projects[i].title! +
+          "cover path:${projects[i].projectCoverImagePath}");
       i++;
     }
   }

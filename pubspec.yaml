@@ -46,6 +46,8 @@ dependencies:
   permission_handler: ^9.0.2
   screenshot: ^1.2.3
   image_gallery_saver: ^1.7.1
+  flutter_absolute_path: ^1.0.6
+
 
 dev_dependencies:
   flutter_test:
