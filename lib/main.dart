@@ -8,7 +8,7 @@ import 'package:post_frame/app/modules/home/home_page.dart';
 
 void main() async {
   await GetStorage.init();
-  await Get.putAsync(() => StorageService().init());
+  // await Get.putAsync(() => StorageService().init());
   runApp(const MyApp());
 }
 
